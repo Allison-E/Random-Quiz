@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Random_Quiz.Db;
+using RandomQuiz.Db;
 
-namespace Random_Quiz.Extensions
+namespace RandomQuiz.Extensions
 {
     public static class DbServiceExtension
     {

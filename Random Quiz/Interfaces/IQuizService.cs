@@ -1,12 +1,12 @@
-﻿using Random_Quiz.Dto;
+﻿using RandomQuiz.Dto;
 using System;
-using Random_Quiz.Db.Models;
+using RandomQuiz.Db.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Random_Quiz.Dto.Tag;
+using RandomQuiz.Dto.Tag;
 
-namespace Random_Quiz.Interfaces
+namespace RandomQuiz.Interfaces
 {
     public interface IQuizService
     {
@@ -26,5 +26,6 @@ namespace Random_Quiz.Interfaces
         /// <param name="id">The ID of the question.</param>
         /// <returns>The question with <paramref name="id"/> as its ID.</returns>
         public Task<QuestionRequest> GetQuestionByIdAsync(Guid id);
+        public Task<List<QuestionRequest>> GetQuestions(string? tag, int? pageSize);
     }
 }

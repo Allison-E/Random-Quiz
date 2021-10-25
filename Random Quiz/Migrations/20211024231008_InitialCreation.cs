@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Random_Quiz.Migrations
+namespace RandomQuiz.Migrations
 {
     public partial class InitialCreation : Migration
     {

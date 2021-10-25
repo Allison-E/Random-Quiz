@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Random_Quiz.Dto.Tag
+namespace RandomQuiz.Dto.Tag
 {
     public class GetTagQuestionCount
     {

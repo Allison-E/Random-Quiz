@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Random_Quiz.Interfaces;
+using RandomQuiz.Interfaces;
 using System;
 using System.Threading.Tasks;
 
-namespace Random_Quiz.Controllers
+namespace RandomQuiz.Controllers
 {
     [Route("/v1/quiz")]
     [ApiController]
@@ -24,6 +24,11 @@ namespace Random_Quiz.Controllers
             //    hasBeenSeeded = service.SetupSeedData().Result;
         }
 
+        /// <summary>
+        /// Gets a random question.
+        /// (/v1/quiz/random)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("random")]
         public async Task<IActionResult> GetRandomQuestion()
         {
@@ -32,6 +37,13 @@ namespace Random_Quiz.Controllers
             if (question == null)
                 return NotFound();
             return Ok(question);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetQuestions([FromQuery] string? tag, [FromQuery] int? pageSize)
+        {
+            var questions = await service.GetQuestions(tag, pageSize);
+            return Ok(questions);
         }
 
         [HttpGet("{id:guid}", Name ="GetQuestionById")]

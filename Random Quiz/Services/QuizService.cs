@@ -1,16 +1,17 @@
-﻿using Random_Quiz.Interfaces;
+﻿using RandomQuiz.Interfaces;
 using System;
 using System.Collections.Generic;
+using conc = System.Collections.Concurrent;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Random_Quiz.Db;
-using Random_Quiz.Db.Models;
-using Random_Quiz.Dto;
-using Random_Quiz.Dto.Tag;
+using RandomQuiz.Db;
+using RandomQuiz.Db.Models;
+using RandomQuiz.Dto;
+using RandomQuiz.Dto.Tag;
 
-namespace Random_Quiz.Services
+namespace RandomQuiz.Services
 {
     public class QuizService : IQuizService
     {
@@ -92,6 +93,31 @@ namespace Random_Quiz.Services
         private async Task<int> noOfQuestionEntries()
         {
             return await context.Questions.CountAsync();
+        }
+
+        public async Task<List<QuestionRequest>> GetQuestions(string? tag, int? pageSize)
+        {
+            List<QuestionRequest> questions = new List<QuestionRequest>();
+            if (pageSize == null)
+                pageSize = 10;
+
+            if (tag == null)
+            {
+                for (int i = 0; i < pageSize; i++)
+                {
+                    questions.Add(await GetRandomQuestionAsync());
+                }
+            }
+            else
+            {
+                
+            }
+            return questions;
+        }
+
+        private IEnumerable<Question> filterQuestionsByTag(string tag, IEnumerable<Question> query)
+        {
+            return query.Where(x => x.Tags.Any(y => y.TagId == tag));
         }
     }
 }

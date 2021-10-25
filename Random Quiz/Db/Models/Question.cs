@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Random_Quiz.Db.Models
+namespace RandomQuiz.Db.Models
 {
     [Table("Questions")]
     public class Question

@@ -1,10 +1,10 @@
-﻿using Random_Quiz.Db.Models;
+﻿using RandomQuiz.Db.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Random_Quiz.Dto
+namespace RandomQuiz.Dto
 {
     public class OptionRequest
     {

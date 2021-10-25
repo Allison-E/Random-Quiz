@@ -1,6 +1,6 @@
 using System;
 
-namespace Random_Quiz
+namespace RandomQuiz
 {
     public class WeatherForecast
     {

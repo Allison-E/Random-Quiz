@@ -10,16 +10,16 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using Random_Quiz.Interfaces;
+using RandomQuiz.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Random_Quiz.Extensions;
-using Random_Quiz.Services;
+using RandomQuiz.Extensions;
+using RandomQuiz.Services;
 using System.Text.Json.Serialization;
 
-namespace Random_Quiz
+namespace RandomQuiz
 {
     public class Startup
     {
@@ -41,7 +41,7 @@ namespace Random_Quiz
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Random_Quiz", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RandomQuiz", Version = "v1" });
             });
         }
 
@@ -52,7 +52,7 @@ namespace Random_Quiz
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Random_Quiz v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RandomQuiz v1"));
             }
 
             app.UseHttpsRedirection();

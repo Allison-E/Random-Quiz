@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Random_Quiz.Db.Models;
-using Random_Quiz.Extensions;
+using RandomQuiz.Db.Models;
+using RandomQuiz.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Random_Quiz.Db
+namespace RandomQuiz.Db
 {
     public class QuestionContext: DbContext
     {

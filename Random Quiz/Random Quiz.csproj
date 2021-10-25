@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-Random_Quiz-CC99CC28-F6AD-4430-8965-BD271637AE25</UserSecretsId>
-    <RootNamespace>Random_Quiz</RootNamespace>
+    <RootNamespace>RandomQuiz</RootNamespace>
+    <Authors>Emmanuel Allison</Authors>
+    <Company />
   </PropertyGroup>
 
   <ItemGroup>

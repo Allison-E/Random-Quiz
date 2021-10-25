@@ -1,8 +1,8 @@
-﻿using Random_Quiz.Db.Models;
+﻿using RandomQuiz.Db.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Random_Quiz.Dto
+namespace RandomQuiz.Dto
 {
     public class QuestionRequest
     {

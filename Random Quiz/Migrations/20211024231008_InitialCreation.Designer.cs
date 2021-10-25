@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Random_Quiz.Db;
+using RandomQuiz.Db;
 
-namespace Random_Quiz.Migrations
+namespace RandomQuiz.Migrations
 {
     [DbContext(typeof(QuestionContext))]
     [Migration("20211024231008_InitialCreation")]
@@ -36,7 +36,7 @@ namespace Random_Quiz.Migrations
                     b.ToTable("QuestionTag");
                 });
 
-            modelBuilder.Entity("Random_Quiz.Db.Models.Option", b =>
+            modelBuilder.Entity("RandomQuiz.Db.Models.Option", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace Random_Quiz.Migrations
                     b.ToTable("Options");
                 });
 
-            modelBuilder.Entity("Random_Quiz.Db.Models.Question", b =>
+            modelBuilder.Entity("RandomQuiz.Db.Models.Question", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,7 +79,7 @@ namespace Random_Quiz.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("Random_Quiz.Db.Models.Tag", b =>
+            modelBuilder.Entity("RandomQuiz.Db.Models.Tag", b =>
                 {
                     b.Property<string>("TagId")
                         .HasColumnType("nvarchar(450)");
@@ -91,29 +91,29 @@ namespace Random_Quiz.Migrations
 
             modelBuilder.Entity("QuestionTag", b =>
                 {
-                    b.HasOne("Random_Quiz.Db.Models.Question", null)
+                    b.HasOne("RandomQuiz.Db.Models.Question", null)
                         .WithMany()
                         .HasForeignKey("QuestionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Random_Quiz.Db.Models.Tag", null)
+                    b.HasOne("RandomQuiz.Db.Models.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsTagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Random_Quiz.Db.Models.Option", b =>
+            modelBuilder.Entity("RandomQuiz.Db.Models.Option", b =>
                 {
-                    b.HasOne("Random_Quiz.Db.Models.Question", null)
+                    b.HasOne("RandomQuiz.Db.Models.Question", null)
                         .WithMany("Options")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Random_Quiz.Db.Models.Question", b =>
+            modelBuilder.Entity("RandomQuiz.Db.Models.Question", b =>
                 {
                     b.Navigation("Options");
                 });

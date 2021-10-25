@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Random_Quiz.Db.Models
+namespace RandomQuiz.Db.Models
 {
     [Table("Options")]
     public class Option
