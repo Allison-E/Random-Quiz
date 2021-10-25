@@ -10,6 +10,7 @@ using RandomQuiz.Db;
 using RandomQuiz.Db.Models;
 using RandomQuiz.Dto;
 using RandomQuiz.Dto.Tag;
+using RandomQuiz.Util;
 
 namespace RandomQuiz.Services
 {
@@ -20,31 +21,6 @@ namespace RandomQuiz.Services
         public QuizService(QuestionContext context)
         {
             this.context = context;
-        }
-
-        public async Task<QuestionRequest> GetRandomQuestionAsync()
-        {
-            int upperBound = noOfQuestionEntries().Result;
-            Random rndGen = new Random();
-            int seed = rndGen.Next(1, upperBound + 1);
-            var question = await context.Questions
-                .Include(x => x.Options)
-                .Include(x => x.Tags)
-                .Where(q => q.Id == seed)
-                .FirstAsync();
-
-            return QuestionRequest.Create(question);
-        }
-
-        public async Task<QuestionRequest> GetQuestionByIdAsync(Guid id)
-        {
-            var question = await context.Questions
-                .Include(x => x.Options)
-                .Include(x => x.Tags)
-                .Where(x => x.QuestionId == id)
-                .FirstAsync();
-
-            return QuestionRequest.Create(question);
         }
 
         public async Task<bool> SetupSeedData()
@@ -88,6 +64,30 @@ namespace RandomQuiz.Services
             };
             await context.Questions.AddAsync(question);
             return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<QuestionRequest> GetRandomQuestionAsync()
+        {
+            int upperBound = noOfQuestionEntries().Result;
+            int seed = RandomGen.Generate(1, upperBound);
+            var question = await context.Questions
+                .Include(x => x.Options)
+                .Include(x => x.Tags)
+                .Where(q => q.Id == seed)
+                .FirstAsync();
+
+            return QuestionRequest.Create(question);
+        }
+
+        public async Task<QuestionRequest> GetQuestionByIdAsync(Guid id)
+        {
+            var question = await context.Questions
+                .Include(x => x.Options)
+                .Include(x => x.Tags)
+                .Where(x => x.QuestionId == id)
+                .FirstAsync();
+
+            return QuestionRequest.Create(question);
         }
 
         private async Task<int> noOfQuestionEntries()
