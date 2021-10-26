@@ -15,7 +15,7 @@ namespace RandomQuiz.Db.Models
         /// The question to be answered.
         /// </summary>
         public string Prompt { get; set; }
-        public List<Option> Options { get; set; } = new List<Option>();
+        public ICollection<Option> Options { get; set; }
         public string Answer { get; set; }
         public ICollection<Tag> Tags { get; set; }
     }

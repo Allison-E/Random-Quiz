@@ -65,7 +65,7 @@ namespace RandomQuiz.Services
             return await context.SaveChangesAsync() > 0;
         }
 
-        public async Task<QuestionRequest> GetRandomQuestionAsync()
+        public async Task<QuestionResponse> GetRandomQuestionAsync()
         {
             int upperBound = await context.Questions.CountAsync();
             int seed = RandomGen.Generate(1, upperBound);
@@ -75,10 +75,10 @@ namespace RandomQuiz.Services
                 .Where(q => q.Id == seed)
                 .FirstAsync();
 
-            return QuestionRequest.Create(question);
+            return QuestionResponse.Create(question);
         }
 
-        public async Task<QuestionRequest> GetQuestionByIdAsync(Guid id)
+        public async Task<QuestionResponse> GetQuestionByIdAsync(Guid id)
         {
             var question = await context.Questions
                 .Include(x => x.Options)
@@ -86,7 +86,7 @@ namespace RandomQuiz.Services
                 .Where(x => x.QuestionId == id)
                 .FirstAsync();
 
-            return QuestionRequest.Create(question);
+            return QuestionResponse.Create(question);
         }
 
         public async Task<object> GetQuestionsAsync(string? tag, int? pageSize, int? pageNumber)
@@ -104,7 +104,16 @@ namespace RandomQuiz.Services
             }
         }
 
-        private async Task<PagedResponse<QuestionRequest>> getPaginatedQuestionsAsync(string tag, int pageSize, int pageNumber)
+        public async Task<string> CreateQuestionAsync(CreateQuestionRequest request)
+        {
+            var question = createQuestionFromRequest(request);
+            await context.Questions.AddAsync(question);
+            await context.SaveChangesAsync();
+
+            return question.QuestionId.ToString();
+        }
+
+        private async Task<PagedResponse<QuestionResponse>> getPaginatedQuestionsAsync(string tag, int pageSize, int pageNumber)
         {
             var response = await context.Questions
                 .Include(x => x.Options)
@@ -115,9 +124,9 @@ namespace RandomQuiz.Services
             return QuestionPagedResponse.Create(response);
         }
 
-        private async Task<List<QuestionRequest>> getRandomQuestionsAsync(int pageSize)
+        private async Task<List<QuestionResponse>> getRandomQuestionsAsync(int pageSize)
         {
-            List<QuestionRequest> questions = new();
+            List<QuestionResponse> questions = new();
             int totalQuestionCount = await context.Questions.CountAsync();
 
             for (int i = 0; i < ((totalQuestionCount < pageSize) ? totalQuestionCount : pageSize); i++)
@@ -127,5 +136,31 @@ namespace RandomQuiz.Services
 
             return questions;
         }
+
+        private Question createQuestionFromRequest(CreateQuestionRequest request)
+        {
+            Question question = new()
+            {
+                QuestionId = Guid.NewGuid(),
+                Prompt = request.Prompt,
+                Answer = request.Answer,
+                Options = new List<Option>(),
+                Tags = new List<Tag>()
+            };
+
+            foreach (var option in request.Options)
+            {
+                question.Options.Add(new() { OptionText = option });
+            }
+
+            foreach (var tag in request.Tags)
+            {
+                question.Tags.Add(new() { TagId = tag });
+            }
+
+            return question;
+        }
+
+
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using RandomQuiz.Dto.Question;
 using RandomQuiz.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -26,7 +28,6 @@ namespace RandomQuiz.Controllers
 
         /// <summary>
         /// Gets a random question.
-        /// (/v1/quiz/random)
         /// </summary>
         /// <returns></returns>
         [HttpGet("random")]
@@ -39,6 +40,13 @@ namespace RandomQuiz.Controllers
             return Ok(question);
         }
 
+        /// <summary>
+        /// Gets a collection of questions (either randomly chosen or filtered by tag).
+        /// </summary>
+        /// <param name="tag">A tag filter.</param>
+        /// <param name="pageSize">The required page size of the paginated response.</param>
+        /// <param name="pageNo">The page number of the paginated response.</param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetQuestions([FromQuery] string? tag, [FromQuery] int? pageSize, [FromQuery] int? pageNo)
         {
@@ -49,7 +57,14 @@ namespace RandomQuiz.Controllers
             return Ok(questions);
         }
 
+        /// <summary>
+        /// Gets a question by its ID.
+        /// </summary>
+        /// <param name="id">The question's ID.</param>
+        /// <returns></returns>
         [HttpGet("{id:guid}", Name ="GetQuestionById")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetQuestionById(Guid id)
         {
             var question = await service.GetQuestionByIdAsync(id);
@@ -60,9 +75,14 @@ namespace RandomQuiz.Controllers
         }
 
         [HttpPost]
-        public void Post()
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateQuestion(CreateQuestionRequest request)
         {
-
+            var createdQuestionId = await service.CreateQuestionAsync(request);
+            var actionName = nameof(GetQuestionById);
+            var routeValues = new { id = createdQuestionId };
+            return CreatedAtAction(actionName, routeValues, createdQuestionId);
         }
     }
 }

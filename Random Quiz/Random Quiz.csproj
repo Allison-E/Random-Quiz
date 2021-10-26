@@ -6,7 +6,16 @@
     <RootNamespace>RandomQuiz</RootNamespace>
     <Authors>Emmanuel Allison</Authors>
     <Company />
+    <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\HP\source\repos\APIs\Random Quiz\Random Quiz\Random Quiz.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />

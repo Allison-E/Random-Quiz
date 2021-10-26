@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Random Quiz</name>
+    </assembly>
+    <members>
+        <member name="M:RandomQuiz.Controllers.QuizController.GetRandomQuestion">
+            <summary>
+            Gets a random question.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:RandomQuiz.Controllers.QuizController.GetQuestions(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Gets a collection of questions (either randomly chosen or filtered by tag).
+            </summary>
+            <param name="tag">A tag filter.</param>
+            <param name="pageSize">The required page size of the paginated response.</param>
+            <param name="pageNo">The page number of the paginated response.</param>
+            <returns></returns>
+        </member>
+        <member name="M:RandomQuiz.Controllers.QuizController.GetQuestionById(System.Guid)">
+            <summary>
+            Gets a question by its ID.
+            </summary>
+            <param name="id">The question's ID.</param>
+            <returns></returns>
+        </member>
+        <member name="P:RandomQuiz.Db.Models.Question.Prompt">
+            <summary>
+            The question to be answered.
+            </summary>
+        </member>
+        <member name="P:RandomQuiz.Db.Models.Tag.TagId">
+            <summary>
+            The text of the tag. Since every tag's text would be unique, this would
+            also be used as the key of the Tag table in the database.
+            </summary>
+        </member>
+        <member name="P:RandomQuiz.Dto.PagedResponse`1.PageSize">
+            <summary>
+            The number of elements that can be returned in a single response.
+            </summary>
+        </member>
+        <member name="P:RandomQuiz.Dto.PagedResponse`1.CurrentPageNumber">
+            <summary>
+            The current page number.
+            </summary>
+        </member>
+        <member name="M:RandomQuiz.Dto.Question.QuestionPagedResponse.Create(RandomQuiz.Dto.PagedResponse{RandomQuiz.Db.Models.Question})">
+            <summary>
+            Creates a <see cref="T:RandomQuiz.Dto.PagedResponse`1"/> from a <see cref="T:RandomQuiz.Dto.PagedResponse`1"/>.
+            </summary>
+            <param name="pagedResponse">A <see cref="T:RandomQuiz.Dto.PagedResponse`1"/>.</param>
+            <returns>The created <see cref="T:RandomQuiz.Dto.PagedResponse`1"/>.</returns>
+        </member>
+        <member name="M:RandomQuiz.Dto.QuestionResponse.Create(RandomQuiz.Db.Models.Question)">
+            <summary>
+            Creates a <see cref="!:QuestionRequest"/> from a <see cref="T:RandomQuiz.Db.Models.Question"/>.
+            </summary>
+            <param name="question">A <see cref="T:RandomQuiz.Db.Models.Question"/>.</param>
+            <returns>The created <see cref="!:QuestionRequest"/>.</returns>
+        </member>
+        <member name="M:RandomQuiz.Interfaces.IQuizService.SetupSeedDataAsync">
+            <summary>
+            Seeds the database and returns a <see cref="T:System.Boolean"/> representing the success of the operation.
+            </summary>
+            <returns><see langword="true"/> if successful, <see langword="false"/> if not.</returns>
+        </member>
+        <member name="M:RandomQuiz.Interfaces.IQuizService.GetRandomQuestionAsync">
+            <summary>
+            Gets a random question.
+            </summary>
+            <returns>The picked <see cref="!:QuestionRequest"/>.</returns>
+        </member>
+        <member name="M:RandomQuiz.Interfaces.IQuizService.GetQuestionByIdAsync(System.Guid)">
+            <summary>
+            Gets a question by its ID.
+            </summary>
+            <param name="id">The ID of the question.</param>
+            <returns>The question with <paramref name="id"/> as its ID.</returns>
+        </member>
+        <member name="M:RandomQuiz.Interfaces.IQuizService.GetQuestionsAsync(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Gets a collection of questions. Can be filtered by tags and paginated.
+            </summary>
+            <param name="tag">A tag filter.</param>
+            <param name="pageSize">The number of questions returned in a request.</param>
+            <param name="pageNumber">The page number of the current request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:RandomQuiz.Util.RandomGen.Generate(System.Int32,System.Int32)">
+            <summary>
+            Generates a random number. It is implemented in such a way that it doesn't
+            generate the same number consecutively.
+            </summary>
+            <param name="lower">The lower bound, inclusive.</param>
+            <param name="upper">The higher bound, inclusive.</param>
+            <returns>A random <see cref="T:System.Int32"/>.</returns>
+        </member>
+    </members>
+</doc>
