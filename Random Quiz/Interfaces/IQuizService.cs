@@ -14,7 +14,7 @@ namespace RandomQuiz.Interfaces
         /// Seeds the database and returns a <see cref="bool"/> representing the success of the operation.
         /// </summary>
         /// <returns><see langword="true"/> if successful, <see langword="false"/> if not.</returns>
-        public Task<bool> SetupSeedData();
+        public Task<bool> SetupSeedDataAsync();
         /// <summary>
         /// Gets a random question.
         /// </summary>
@@ -26,6 +26,6 @@ namespace RandomQuiz.Interfaces
         /// <param name="id">The ID of the question.</param>
         /// <returns>The question with <paramref name="id"/> as its ID.</returns>
         public Task<QuestionRequest> GetQuestionByIdAsync(Guid id);
-        public Task<object> GetQuestions(string? tag, int? pageSize, int? pageNumber);
+        public Task<object> GetQuestionsAsync(string? tag, int? pageSize, int? pageNumber);
     }
 }

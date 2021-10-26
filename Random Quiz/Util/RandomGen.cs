@@ -10,7 +10,7 @@ namespace RandomQuiz.Util
 {
     public static class RandomGen
     {
-        internal static Queue<int> alreadyGenerated = new Queue<int>();
+        internal static Queue<int> alreadyGenerated = new();
 
         /// <summary>
         /// Generates a random number. It is implemented in such a way that it doesn't

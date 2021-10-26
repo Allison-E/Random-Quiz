@@ -22,7 +22,7 @@ namespace RandomQuiz.Services
             this.context = context;
         }
 
-        public async Task<bool> SetupSeedData()
+        public async Task<bool> SetupSeedDataAsync()
         {
             var question = new Question
             {
@@ -67,7 +67,7 @@ namespace RandomQuiz.Services
 
         public async Task<QuestionRequest> GetRandomQuestionAsync()
         {
-            int upperBound = noOfQuestionEntries().Result;
+            int upperBound = await context.Questions.CountAsync();
             int seed = RandomGen.Generate(1, upperBound);
             var question = await context.Questions
                 .Include(x => x.Options)
@@ -89,33 +89,22 @@ namespace RandomQuiz.Services
             return QuestionRequest.Create(question);
         }
 
-        private async Task<int> noOfQuestionEntries()
+        public async Task<object> GetQuestionsAsync(string? tag, int? pageSize, int? pageNumber)
         {
-            return await context.Questions.CountAsync();
-        }
-
-        public async Task<object> GetQuestions(string? tag, int? pageSize, int? pageNumber)
-        {
-            List<QuestionRequest> questions = new List<QuestionRequest>();
             pageSize = (pageSize == null) ? 10 : pageSize;
             pageNumber = (pageNumber == null) ? 1 : pageNumber;
 
             if (tag == null)
             {
-                for (int i = 0; i < pageSize; i++)
-                {
-                    questions.Add(await GetRandomQuestionAsync());
-                }
-
-                return questions;
+                return getRandomQuestionsAsync((int)pageSize);
             }
             else
             {
-                return await getPaginatedQuestions(tag, (int)pageSize, (int)pageNumber);
+                return await getPaginatedQuestionsAsync(tag, (int)pageSize, (int)pageNumber);
             }
         }
 
-        private async Task<PagedResponse<QuestionRequest>> getPaginatedQuestions(string tag, int pageSize, int pageNumber)
+        private async Task<PagedResponse<QuestionRequest>> getPaginatedQuestionsAsync(string tag, int pageSize, int pageNumber)
         {
             var response = await context.Questions
                 .Include(x => x.Options)
@@ -124,6 +113,19 @@ namespace RandomQuiz.Services
                 .PaginateAsync(pageSize, pageNumber);
 
             return QuestionPagedResponse.Create(response);
+        }
+
+        private async Task<List<QuestionRequest>> getRandomQuestionsAsync(int pageSize)
+        {
+            List<QuestionRequest> questions = new();
+            int totalQuestionCount = await context.Questions.CountAsync();
+
+            for (int i = 0; i < ((totalQuestionCount < pageSize) ? totalQuestionCount : pageSize); i++)
+            {
+                questions.Add(await GetRandomQuestionAsync());
+            }
+
+            return questions;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace RandomQuiz.Dto
     {
         public string TagId { get; set; }
 
-        public static TagRequest Create(Db.Models.Tag tag) => new TagRequest { TagId = tag.TagId };
+        public static TagRequest Create(Db.Models.Tag tag) => new() { TagId = tag.TagId };
 
         public static ICollection<TagRequest> CreateCollection(ICollection<Db.Models.Tag> tags)
         {

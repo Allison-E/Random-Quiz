@@ -41,7 +41,7 @@ namespace RandomQuiz.Tests.Util
         {
             int lower = 1;
             int upper = 10;
-            Queue<int> beenGenerated = new Queue<int>(5);
+            Queue<int> beenGenerated = new(5);
 
             for (int i = 0; i < 1_000; i++)
             {
