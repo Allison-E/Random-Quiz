@@ -40,9 +40,12 @@ namespace RandomQuiz.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetQuestions([FromQuery] string? tag, [FromQuery] int? pageSize)
+        public async Task<IActionResult> GetQuestions([FromQuery] string? tag, [FromQuery] int? pageSize, [FromQuery] int? pageNo)
         {
-            var questions = await service.GetQuestions(tag, pageSize);
+            var questions = await service.GetQuestions(tag, pageSize, pageNo);
+
+            if (questions == null)
+                return NotFound();
             return Ok(questions);
         }
 

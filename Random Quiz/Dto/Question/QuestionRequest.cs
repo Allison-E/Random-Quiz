@@ -1,4 +1,4 @@
-﻿using RandomQuiz.Db.Models;
+﻿using models = RandomQuiz.Db.Models;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +12,12 @@ namespace RandomQuiz.Dto
         public string Answer { get; set; }
         public ICollection<TagRequest> Tags { get; set; }
 
-        public static QuestionRequest Create(Question question)
+        /// <summary>
+        /// Creates a <see cref="QuestionRequest"/> from a <see cref="models.Question"/>.
+        /// </summary>
+        /// <param name="question">A <see cref="models.Question"/>.</param>
+        /// <returns>The created <see cref="QuestionRequest"/>.</returns>
+        public static QuestionRequest Create(models.Question question)
         {
             return new QuestionRequest
             {

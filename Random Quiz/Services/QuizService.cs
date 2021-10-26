@@ -1,16 +1,15 @@
-﻿using RandomQuiz.Interfaces;
-using System;
-using System.Collections.Generic;
-using conc = System.Collections.Concurrent;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RandomQuiz.Db;
 using RandomQuiz.Db.Models;
 using RandomQuiz.Dto;
-using RandomQuiz.Dto.Tag;
+using RandomQuiz.Dto.Question;
+using RandomQuiz.Extensions;
+using RandomQuiz.Interfaces;
 using RandomQuiz.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RandomQuiz.Services
 {
@@ -95,11 +94,11 @@ namespace RandomQuiz.Services
             return await context.Questions.CountAsync();
         }
 
-        public async Task<List<QuestionRequest>> GetQuestions(string? tag, int? pageSize)
+        public async Task<object> GetQuestions(string? tag, int? pageSize, int? pageNumber)
         {
             List<QuestionRequest> questions = new List<QuestionRequest>();
-            if (pageSize == null)
-                pageSize = 10;
+            pageSize = (pageSize == null) ? 10 : pageSize;
+            pageNumber = (pageNumber == null) ? 1 : pageNumber;
 
             if (tag == null)
             {
@@ -107,17 +106,24 @@ namespace RandomQuiz.Services
                 {
                     questions.Add(await GetRandomQuestionAsync());
                 }
+
+                return questions;
             }
             else
             {
-                
+                return await getPaginatedQuestions(tag, (int)pageSize, (int)pageNumber);
             }
-            return questions;
         }
 
-        private IEnumerable<Question> filterQuestionsByTag(string tag, IEnumerable<Question> query)
+        private async Task<PagedResponse<QuestionRequest>> getPaginatedQuestions(string tag, int pageSize, int pageNumber)
         {
-            return query.Where(x => x.Tags.Any(y => y.TagId == tag));
+            var response = await context.Questions
+                .Include(x => x.Options)
+                .Include(x => x.Tags)
+                .FilterByTag(tag)
+                .PaginateAsync(pageSize, pageNumber);
+
+            return QuestionPagedResponse.Create(response);
         }
     }
 }

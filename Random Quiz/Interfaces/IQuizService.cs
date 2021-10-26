@@ -26,6 +26,6 @@ namespace RandomQuiz.Interfaces
         /// <param name="id">The ID of the question.</param>
         /// <returns>The question with <paramref name="id"/> as its ID.</returns>
         public Task<QuestionRequest> GetQuestionByIdAsync(Guid id);
-        public Task<List<QuestionRequest>> GetQuestions(string? tag, int? pageSize);
+        public Task<object> GetQuestions(string? tag, int? pageSize, int? pageNumber);
     }
 }

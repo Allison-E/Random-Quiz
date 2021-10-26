@@ -39,6 +39,7 @@ namespace RandomQuiz
             services.AddTransient<IQuizService, QuizService>();
             services.AddDatabaseService(Configuration.GetConnectionString("RandomQuiz"));
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RandomQuiz", Version = "v1" });
