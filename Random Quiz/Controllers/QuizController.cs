@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RandomQuiz.Dto;
 using RandomQuiz.Dto.Question;
+using RandomQuiz.Dto.Tag;
 using RandomQuiz.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -79,13 +80,36 @@ namespace RandomQuiz.Controllers
             return Ok(question);
         }
 
+        /// <summary>
+        /// Gets all tags in the database.
+        /// </summary>
+        /// <param name="sortBy">Sort by ascending or descending? Default value is ascending.</param>
+        /// <param name="pageSize">The number of tags to be sent in a request.</param>
+        /// <param name="pageNumber">The number of the current page.</param>
+        /// <returns>A collection of tags.</returns>
         [HttpGet("Tags")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetTags(SortByEnum? sortBy, int? pageSize, int? pageNumber)
         {
             var result = await service.GetTagsAsync(sortBy, pageSize, pageNumber);
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Gets the details of a tag.
+        /// </summary>
+        /// <param name="id">The id of the tag. It is the name of a tag. For example, to get the details of a tag called <c>Math</c> 
+        /// send in math as the id.</param>
+        /// <returns>A <see cref="TagDetailResponse"/></returns>
+        [HttpGet("tags/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTagDetail(string id)
+        {
+            var tagDetail = await service.GetTagDetailAsync(id);
+            if (tagDetail == null)
+                return NotFound(id);
+            return Ok(tagDetail);
         }
         
         /// <summary>

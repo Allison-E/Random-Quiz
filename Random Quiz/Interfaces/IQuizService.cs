@@ -35,9 +35,25 @@ namespace RandomQuiz.Interfaces
         /// <param name="pageNumber">The page number of the current request.</param>
         /// <returns></returns>
         public Task<object> GetQuestionsAsync(string? tag, int? pageSize, int? pageNumber);
-
-        public Task<object> GetTagsAsync(SortByEnum? sortBy, int? pageSize, int?pageNumber);
-
+        /// <summary>
+        /// Gets a collection of tags. Can be sorted in either ascending or descending order and paginated.
+        /// </summary>
+        /// <param name="sortBy">Sort by ascending or descending? Default value is ascending.</param>
+        /// <param name="pageSize">The number of tags to be sent in a request.</param>
+        /// <param name="pageNumber">The number of the current page.</param>
+        /// <returns>A collection of tags.</returns>
+        public Task<object> GetTagsAsync(SortByEnum? sortBy, int? pageSize, int? pageNumber);
+        /// <summary>
+        /// Get the details of a tag by its id.
+        /// </summary>
+        /// <param name="id">The id of a tag (which is the tag's name).</param>
+        /// <returns>A <see cref="TagDetailResponse"/>.</returns>
+        public Task<TagDetailResponse> GetTagDetailAsync(string id);
+        /// <summary>
+        /// Creates a question and saves it in the database.
+        /// </summary>
+        /// <param name="request">The request in the form of a <see cref="CreateQuestionRequest"/></param>
+        /// <returns>The <see cref="Question.QuestionId"/> of the created question as a string.</returns>
         public Task<string> CreateQuestionAsync(CreateQuestionRequest request);
     }
 }

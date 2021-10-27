@@ -154,6 +154,12 @@ namespace RandomQuiz.Services
             return TagPagedResponse.Create(response);
         }
 
+        public async Task<TagDetailResponse> GetTagDetailAsync(string id)
+        {
+            TagDetailResponse tagDetail = TagDetailResponse.ToTagDetailResponse(await context.Tags.Include(x => x.Questions).FirstAsync(t => t.TagId == id));
+            return tagDetail;
+        }
+
         private async Task<PagedResponse<QuestionResponse>> getPaginatedQuestionsAsync(string tag, int pageSize, int pageNumber)
         {
             var response = await context.Questions
@@ -210,12 +216,6 @@ namespace RandomQuiz.Services
         {
             pageSize = (pageSize == null) ? 10 : pageSize;
             pageNumber = (pageNumber == null) ? 1 : pageNumber;
-        }
-
-        private async Task<Tag> tagExistsInDatabase(Tag tag)
-        {
-            Tag dbTag = await context.Tags.FirstAsync(x => x.TagId == tag.TagId);
-            return (dbTag != null) ? dbTag : tag;
         }
     }
 }

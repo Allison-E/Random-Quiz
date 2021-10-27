@@ -26,6 +26,23 @@
             <param name="id">The question's ID.</param>
             <returns></returns>
         </member>
+        <member name="M:RandomQuiz.Controllers.QuizController.GetTags(System.Nullable{RandomQuiz.Dto.SortByEnum},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Gets all tags in the database.
+            </summary>
+            <param name="sortBy">Sort by ascending or descending? Default value is ascending.</param>
+            <param name="pageSize">The number of tags to be sent in a request.</param>
+            <param name="pageNumber">The number of the current page.</param>
+            <returns>A collection of tags.</returns>
+        </member>
+        <member name="M:RandomQuiz.Controllers.QuizController.GetTagDetail(System.String)">
+            <summary>
+            Gets the details of a tag.
+            </summary>
+            <param name="id">The id of the tag. It is the name of a tag. For example, to get the details of a tag called <c>Math</c> 
+            send in math as the id.</param>
+            <returns>A <see cref="T:RandomQuiz.Dto.Tag.TagDetailResponse"/></returns>
+        </member>
         <member name="M:RandomQuiz.Controllers.QuizController.CreateQuestion(RandomQuiz.Dto.Question.CreateQuestionRequest)">
             <summary>
             Creates a new question.
@@ -102,6 +119,29 @@
             <param name="pageSize">The number of questions returned in a request.</param>
             <param name="pageNumber">The page number of the current request.</param>
             <returns></returns>
+        </member>
+        <member name="M:RandomQuiz.Interfaces.IQuizService.GetTagsAsync(System.Nullable{RandomQuiz.Dto.SortByEnum},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Gets a collection of tags. Can be sorted in either ascending or descending order and paginated.
+            </summary>
+            <param name="sortBy">Sort by ascending or descending? Default value is ascending.</param>
+            <param name="pageSize">The number of tags to be sent in a request.</param>
+            <param name="pageNumber">The number of the current page.</param>
+            <returns>A collection of tags.</returns>
+        </member>
+        <member name="M:RandomQuiz.Interfaces.IQuizService.GetTagDetailAsync(System.String)">
+            <summary>
+            Get the details of a tag by its id.
+            </summary>
+            <param name="id">The id of a tag (which is the tag's name).</param>
+            <returns>A <see cref="T:RandomQuiz.Dto.Tag.TagDetailResponse"/>.</returns>
+        </member>
+        <member name="M:RandomQuiz.Interfaces.IQuizService.CreateQuestionAsync(RandomQuiz.Dto.Question.CreateQuestionRequest)">
+            <summary>
+            Creates a question and saves it in the database.
+            </summary>
+            <param name="request">The request in the form of a <see cref="T:RandomQuiz.Dto.Question.CreateQuestionRequest"/></param>
+            <returns>The <see cref="P:RandomQuiz.Db.Models.Question.QuestionId"/> of the created question as a string.</returns>
         </member>
         <member name="M:RandomQuiz.Services.QuizService.checkPageParameters(System.Nullable{System.Int32}@,System.Nullable{System.Int32}@)">
             <summary>
