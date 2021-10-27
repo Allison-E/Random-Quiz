@@ -3,6 +3,7 @@ using RandomQuiz.Db;
 using RandomQuiz.Db.Models;
 using RandomQuiz.Dto;
 using RandomQuiz.Dto.Question;
+using RandomQuiz.Dto.Tag;
 using RandomQuiz.Extensions;
 using RandomQuiz.Interfaces;
 using RandomQuiz.Util;
@@ -91,8 +92,7 @@ namespace RandomQuiz.Services
 
         public async Task<object> GetQuestionsAsync(string? tag, int? pageSize, int? pageNumber)
         {
-            pageSize = (pageSize == null) ? 10 : pageSize;
-            pageNumber = (pageNumber == null) ? 1 : pageNumber;
+            checkPageParameters(ref pageSize, ref pageNumber);
 
             if (tag == null)
             {
@@ -107,10 +107,51 @@ namespace RandomQuiz.Services
         public async Task<string> CreateQuestionAsync(CreateQuestionRequest request)
         {
             var question = createQuestionFromRequest(request);
-            await context.Questions.AddAsync(question);
-            await context.SaveChangesAsync();
+            using var transaction = await context.Database.BeginTransactionAsync();
+            List<Tag> tagsForQuestion = new();
 
+            try
+            {
+                var addQuestion = context.Questions.AddAsync(question);
+                for (int i = 0; i < request.Tags.Count; i++)
+                {
+                    // If tag exists in the database.
+                    var tagFromDb = await context.Tags.FirstAsync(x => x.TagId == request.Tags[i]);
+                    tagFromDb?.Questions.Add(question);
+
+                    tagsForQuestion.Add(tagFromDb ?? new()
+                    {
+                        TagId = request.Tags[i],
+                        Questions = new List<Question>() { question }
+                    });
+                    
+                }
+
+                await addQuestion;
+                context.Tags.UpdateRange(tagsForQuestion);
+                await context.SaveChangesAsync();
+                await context.Database.CommitTransactionAsync();
+            }
+            catch
+            {
+                await context.Database.RollbackTransactionAsync();
+                throw new OperationCanceledException("Question could not be added");
+            }
+            
             return question.QuestionId.ToString();
+        }
+
+        public async Task<object> GetTagsAsync(SortByEnum? sortBy, int? pageSize, int? pageNumber)
+        {
+            checkPageParameters(ref pageSize, ref pageNumber);
+            IQueryable<Tag> query = sortBy switch
+            {
+                SortByEnum.Ascending => context.Tags.OrderBy(x => x.TagId),
+                SortByEnum.Descending => context.Tags.OrderByDescending(x => x.TagId),
+                _ => context.Tags
+            };
+            var response = await query.PaginateAsync((int)pageSize, (int)pageNumber);
+            return TagPagedResponse.Create(response);
         }
 
         private async Task<PagedResponse<QuestionResponse>> getPaginatedQuestionsAsync(string tag, int pageSize, int pageNumber)
@@ -124,7 +165,7 @@ namespace RandomQuiz.Services
             return QuestionPagedResponse.Create(response);
         }
 
-        private async Task<List<QuestionResponse>> getRandomQuestionsAsync(int pageSize)
+        private async Task<ICollection<QuestionResponse>> getRandomQuestionsAsync(int pageSize)
         {
             List<QuestionResponse> questions = new();
             int totalQuestionCount = await context.Questions.CountAsync();
@@ -144,8 +185,7 @@ namespace RandomQuiz.Services
                 QuestionId = Guid.NewGuid(),
                 Prompt = request.Prompt,
                 Answer = request.Answer,
-                Options = new List<Option>(),
-                Tags = new List<Tag>()
+                Options = new List<Option>()
             };
 
             foreach (var option in request.Options)
@@ -159,8 +199,23 @@ namespace RandomQuiz.Services
             }
 
             return question;
+        } 
+
+        /// <summary>
+        /// Sets default values for the pagination parameters if they are null;
+        /// </summary>
+        /// <param name="pageSize"></param>
+        /// <param name="pageNumber"></param>
+        private void checkPageParameters(ref int? pageSize, ref int? pageNumber)
+        {
+            pageSize = (pageSize == null) ? 10 : pageSize;
+            pageNumber = (pageNumber == null) ? 1 : pageNumber;
         }
 
-
+        private async Task<Tag> tagExistsInDatabase(Tag tag)
+        {
+            Tag dbTag = await context.Tags.FirstAsync(x => x.TagId == tag.TagId);
+            return (dbTag != null) ? dbTag : tag;
+        }
     }
 }

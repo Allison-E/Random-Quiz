@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RandomQuiz.Dto;
 using RandomQuiz.Dto.Question;
 using RandomQuiz.Interfaces;
 using System;
@@ -31,6 +32,8 @@ namespace RandomQuiz.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("random")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRandomQuestion()
         {
             var question = await service.GetRandomQuestionAsync();
@@ -48,6 +51,8 @@ namespace RandomQuiz.Controllers
         /// <param name="pageNo">The page number of the paginated response.</param>
         /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetQuestions([FromQuery] string? tag, [FromQuery] int? pageSize, [FromQuery] int? pageNo)
         {
             var questions = await service.GetQuestionsAsync(tag, pageSize, pageNo);
@@ -63,8 +68,8 @@ namespace RandomQuiz.Controllers
         /// <param name="id">The question's ID.</param>
         /// <returns></returns>
         [HttpGet("{id:guid}", Name ="GetQuestionById")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetQuestionById(Guid id)
         {
             var question = await service.GetQuestionByIdAsync(id);
@@ -74,12 +79,38 @@ namespace RandomQuiz.Controllers
             return Ok(question);
         }
 
+        [HttpGet("Tags")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTags(SortByEnum? sortBy, int? pageSize, int? pageNumber)
+        {
+            var result = await service.GetTagsAsync(sortBy, pageSize, pageNumber);
+            return Ok(result);
+        }
+        
+        /// <summary>
+        /// Creates a new question.
+        /// </summary>
+        /// <param name="request">The question fields corresponding to the <see cref="CreatedAtActionResult"/> properties.</param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateQuestion(CreateQuestionRequest request)
         {
-            var createdQuestionId = await service.CreateQuestionAsync(request);
+            string createdQuestionId;
+            try
+            {
+                createdQuestionId = await service.CreateQuestionAsync(request);
+            }
+            catch (OperationCanceledException e)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new 
+                {
+                    Status = 409,
+                    Message = e.Message
+                });
+            }
             var actionName = nameof(GetQuestionById);
             var routeValues = new { id = createdQuestionId };
             return CreatedAtAction(actionName, routeValues, createdQuestionId);

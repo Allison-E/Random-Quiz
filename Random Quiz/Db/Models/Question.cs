@@ -17,6 +17,6 @@ namespace RandomQuiz.Db.Models
         public string Prompt { get; set; }
         public ICollection<Option> Options { get; set; }
         public string Answer { get; set; }
-        public ICollection<Tag> Tags { get; set; }
+        public List<Tag> Tags { get; set; } = new();
     }
 }

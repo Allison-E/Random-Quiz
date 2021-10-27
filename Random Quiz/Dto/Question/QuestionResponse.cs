@@ -10,7 +10,7 @@ namespace RandomQuiz.Dto
         public string Prompt { get; set; }
         public ICollection<OptionResponse> Options { get; set; }
         public string Answer { get; set; }
-        public ICollection<TagRequest> Tags { get; set; }
+        public ICollection<TagResponse> Tags { get; set; }
 
         /// <summary>
         /// Creates a <see cref="QuestionRequest"/> from a <see cref="models.Question"/>.
@@ -25,7 +25,7 @@ namespace RandomQuiz.Dto
                 Prompt = question.Prompt,
                 Options = OptionResponse.CreateCollection(question.Options),
                 Answer = question.Answer,
-                Tags = TagRequest.CreateCollection(question.Tags)
+                Tags = TagResponse.CreateCollection(question.Tags)
             };
         }
     }

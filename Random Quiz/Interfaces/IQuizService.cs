@@ -36,6 +36,8 @@ namespace RandomQuiz.Interfaces
         /// <returns></returns>
         public Task<object> GetQuestionsAsync(string? tag, int? pageSize, int? pageNumber);
 
+        public Task<object> GetTagsAsync(SortByEnum? sortBy, int? pageSize, int?pageNumber);
+
         public Task<string> CreateQuestionAsync(CreateQuestionRequest request);
     }
 }

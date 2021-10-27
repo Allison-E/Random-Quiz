@@ -14,6 +14,6 @@ namespace RandomQuiz.Dto.Question
         public ICollection<string> Options { get; set; }
         [Required]
         public string Answer { get; set; }
-        public ICollection<string> Tags { get; set; }
+        public List<string> Tags { get; set; } = new List<string>();
     }
 }
