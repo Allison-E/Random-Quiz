@@ -5,6 +5,7 @@ using RandomQuiz.Dto.Question;
 using RandomQuiz.Dto.Tag;
 using RandomQuiz.Interfaces;
 using System;
+using Sentry;
 using System.Threading.Tasks;
 
 namespace RandomQuiz.Controllers
@@ -14,11 +15,13 @@ namespace RandomQuiz.Controllers
     public class QuizController : ControllerBase
     {
         private readonly IQuizService service;
+        private readonly IHub sentryHub;
         //private static bool hasBeenSeeded = false;
 
-        public QuizController(IQuizService service)
+        public QuizController(IQuizService service, IHub sentryHub)
         {
             this.service = service;
+            this.sentryHub = sentryHub;
 
             // ======  UNCOMMENT AT YOUR OWN RISK!!!  ======
             //  I used the following code to seed the database at first, if you uncomment it, you'd be duplicating the data.
@@ -37,6 +40,7 @@ namespace RandomQuiz.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRandomQuestion()
         {
+            sentryHub.CaptureMessage("GetRandomQuestion() has been called");
             var question = await service.GetRandomQuestionAsync();
 
             if (question == null)

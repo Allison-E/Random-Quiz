@@ -55,6 +55,10 @@ namespace RandomQuiz
 
             app.UseRouting();
 
+            // Enable automatic tracing integration.
+            // Make sure to put this middleware right after "UseRouting()'.
+            app.UseSentryTracing();
+
             //app.UseAuthentication();
             //app.UseAuthorization();
 
