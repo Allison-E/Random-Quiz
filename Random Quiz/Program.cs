@@ -30,7 +30,6 @@ namespace RandomQuiz
                         // We recommend adjusting this value in production.
                         o.TracesSampleRate = 1.0;
                     });
-                    SentrySdk.CaptureMessage("Hello Sentry");
                     webBuilder.UseStartup<Startup>();
                 });
     }
